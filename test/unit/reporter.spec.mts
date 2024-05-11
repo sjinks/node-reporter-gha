@@ -2,7 +2,7 @@ import { deepEqual } from 'node:assert/strict';
 import { EOL } from 'node:os';
 import { test } from 'node:test';
 import type { TestEvent } from 'node:test/reporters';
-import ghaReporter from '../../lib';
+import ghaReporter from '../../lib/index.mjs';
 
 const queue: TestEvent[] = [
     {

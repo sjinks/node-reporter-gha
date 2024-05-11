@@ -1,7 +1,7 @@
 import { equal } from 'node:assert/strict';
 import { EOL } from 'node:os';
 import { test } from 'node:test';
-import { issueCommand } from '../../lib/command';
+import { issueCommand } from '../../lib/command.mjs';
 
 void test('command', async (t) => {
     await t.test('issueCommand', async (t) => {

@@ -79,4 +79,4 @@ jobs:
 
       - name: Run tests
         run: |
-          node --import tsx --test-reporter=./dist/lib/index.js --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout --test test/*/*.spec.ts
+          npx tsx --test-reporter=./dist/lib/index.mjs --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout --test test/*/*.spec.mts

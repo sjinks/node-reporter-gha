@@ -1,5 +1,5 @@
 import { EOL } from 'node:os';
-import { escapeData, escapeProperty } from './utils';
+import { escapeData, escapeProperty } from './utils.mjs';
 
 class Command {
     public constructor(
