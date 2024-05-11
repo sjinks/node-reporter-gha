@@ -1,5 +1,5 @@
 import type { TestEvent } from 'node:test/reporters';
-import { issueCommand } from './command';
+import { issueCommand } from './command.mjs';
 
 interface FailedTestInfo {
     name: string;
@@ -9,7 +9,7 @@ interface FailedTestInfo {
     message: string;
 }
 
-export = async function* ghaReporter(
+export default async function* ghaReporter(
     source: AsyncGenerator<TestEvent, void> | Generator<TestEvent, void>,
 ): AsyncGenerator<string, void> {
     const failedTests: FailedTestInfo[] = [];
@@ -33,4 +33,4 @@ export = async function* ghaReporter(
         }
         yield issueCommand('endgroup');
     }
-};
+}

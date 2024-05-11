@@ -1,8 +1,9 @@
 import { equal, match } from 'node:assert/strict';
 import { describe, it, run } from 'node:test';
 import { WritableBufferStream } from '@myrotvorets/buffer-stream';
-import { extname } from 'node:path';
-import ghaReporter from '../../lib';
+import { dirname, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import ghaReporter from '../../lib/index.mjs';
 
 const runner = (files: string[]): Promise<string> =>
     new Promise<string>((resolve, reject) => {
@@ -18,7 +19,8 @@ const runner = (files: string[]): Promise<string> =>
 
 void describe('GitHub Actions Reporter', () => {
     void it('will generate a report entry on failure', async () => {
-        const result = await runner([`${__dirname}/test${extname(__filename)}`]);
+        const thisDir = dirname(fileURLToPath(import.meta.url));
+        const result = await runner([`${thisDir}/test${extname(fileURLToPath(import.meta.url))}`]);
         const lines = result.trim().split('\n');
         equal(lines.length, 4);
         equal(lines[0], '::group::Test Failures');

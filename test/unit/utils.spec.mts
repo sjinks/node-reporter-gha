@@ -1,6 +1,6 @@
 import { equal } from 'node:assert/strict';
 import { test } from 'node:test';
-import { escapeData, escapeProperty } from '../../lib/utils';
+import { escapeData, escapeProperty } from '../../lib/utils.mjs';
 
 void test('utils', async (t) => {
     await t.test('escapeData', () => {
