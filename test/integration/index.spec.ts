@@ -1,6 +1,7 @@
 import { equal, match } from 'node:assert/strict';
 import { describe, it, run } from 'node:test';
 import { WritableBufferStream } from '@myrotvorets/buffer-stream';
+import { extname } from 'node:path';
 import ghaReporter from '../../lib';
 
 const runner = (files: string[]): Promise<string> =>
@@ -17,7 +18,7 @@ const runner = (files: string[]): Promise<string> =>
 
 void describe('GitHub Actions Reporter', () => {
     void it('will generate a report entry on failure', async () => {
-        const result = await runner([`${__dirname}/test.ts`]);
+        const result = await runner([`${__dirname}/test${extname(__filename)}`]);
         const lines = result.trim().split('\n');
         equal(lines.length, 4);
         equal(lines[0], '::group::Test Failures');

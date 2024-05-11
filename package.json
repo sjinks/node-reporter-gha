@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
-    "test": "node --import tsx --test test/unit/*.spec.ts && node --import tsx test/integration/index.spec.ts",
-    "test:coverage": "c8 npm run test",
+    "test": "tsx --test test/unit/*.spec.ts && tsx test/integration/index.spec.ts",
+    "test:js": "node --test dist/test/unit/*.spec.js && node dist/test/integration/index.spec.js",
+    "pretest:coverage": "npm run build",
+    "test:coverage": "c8 npm run test:js",
     "prepack": "npm run build"
   },
   "keywords": [
