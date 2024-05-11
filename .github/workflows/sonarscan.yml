@@ -1,0 +1,87 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: |
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a4aa98b93cab29d9b1101a6143fb8bce00e2eac4 # v2.7.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com
+            github.com:443
+            pipelinesghubeus23.actions.githubusercontent.com:443
+            registry.npmjs.org:443
+            sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
+            scanner.sonarcloud.io:443
+            sonarcloud.io:443
+
+      - name: Check out the source code
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_FUND: '0'
+          NPM_CONFIG_AUDIT: '0'
+          SUPPRESS_SUPPORT: '1'
+          NO_UPDATE_NOTIFIER: 'true'
+
+      - name: Run postinstall scripts
+        run: npm rebuild && npm run prepare --if-present
+
+      - name: Run tests
+        shell: bash
+        run: npm run test:coverage
+        env:
+          NO_UPDATE_NOTIFIER: 'true'
+
+      - name: Grab info
+        id: info
+        run: |
+          echo "packageName=$(jq -r .name package.json)" >> "${GITHUB_OUTPUT}"
+          echo "packageVersion=$(jq -r .version package.json)" >> "${GITHUB_OUTPUT}"
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@49e6cd3b187936a73b8280d59ffd9da69df63ec9 # v2.1.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectName=${{ steps.info.outputs.packageName }}
+            -Dsonar.projectVersion=${{ steps.info.outputs.packageVersion }}
+            -Dsonar.links.homepage=${{ github.event.repository.homepage }}
+            -Dsonar.links.issue=${{ github.event.repository.html_url }}/issues
+            -Dsonar.links.scm=${{ github.repositoryUrl }}
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info

@@ -1,0 +1,50 @@
+{
+  "name": "node-reporter-gha",
+  "description": "Node reporter for GitHub Actions",
+  "version": "0.0.1",
+  "main": "dist/lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint .",
+    "test": "node --import tsx --test test/unit/*.spec.ts && node --import tsx test/integration/index.spec.ts",
+    "test:coverage": "c8 npm run test",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "test-reporter",
+    "node-reporter",
+    "gha",
+    "github-actions"
+  ],
+  "files": [
+    "dist/lib/index.js",
+    "dist/lib/index.d.ts",
+    "dist/lib/index.js.map"
+  ],
+  "typings": "dist/lib/index.d.ts",
+  "author": "Volodymyr Kolesnykov <volodymyr@wildwolf.name> (https://wildwolf.name/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@myrotvorets/buffer-stream": "^1.4.0",
+    "@myrotvorets/eslint-config-myrotvorets-ts": "^2.26.0",
+    "@types/node": "^20.12.11",
+    "c8": "^9.1.0",
+    "tsx": "^4.9.4",
+    "typescript": "^5.4.5"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjinks/node-reporter-gha.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sjinks/node-reporter-gha/issues"
+  },
+  "homepage": "https://github.com/sjinks/node-reporter-gha#readme",
+  "publishConfig": {
+    "provenance": true
+  }
+}

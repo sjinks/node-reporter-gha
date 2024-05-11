@@ -1,0 +1,37 @@
+name: Package Audit
+
+on:
+  push:
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/package-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-npm:
+    name: NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a4aa98b93cab29d9b1101a6143fb8bce00e2eac4 # v2.7.1
+        with:
+          disable-sudo: true
+          allowed-endpoints:
+            api.github.com:443
+            github.com:443
+            registry.npmjs.org:443
+
+      - name: Checkout
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: lts/*
+
+      - name: Run audit
+        run: npm audit --production
