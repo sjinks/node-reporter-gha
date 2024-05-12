@@ -1,6 +1,6 @@
 import { deepEqual } from 'node:assert/strict';
 import { EOL } from 'node:os';
-import { test } from 'node:test';
+import { after, before, describe, test } from 'node:test';
 import type { TestEvent } from 'node:test/reporters';
 import ghaReporter from '../../lib/index.mjs';
 
@@ -202,8 +202,19 @@ function* generator(): Generator<TestEvent> {
     }
 }
 
-void test('reporter', async (t) => {
-    await t.test('will produce a report', async () => {
+await describe('reporter', async () => {
+    let env: typeof process.env;
+
+    before(() => {
+        env = { ...process.env };
+        process.env['GITHUB_ACTIONS'] = 'true';
+    });
+
+    after(() => {
+        process.env = env;
+    });
+
+    await test('will produce a report', async () => {
         const expected = [
             `::group::Test Failures${EOL}`,
             `::error title=will generate a report entry on failure,file=node-reporter-gha/test/integration/test.ts,line=2,col=196::Expected 2 to equal 1${EOL}`,
