@@ -1,5 +1,6 @@
 import type { TestEvent } from 'node:test/reporters';
 import { issueCommand } from './command.mjs';
+import { transformFilename } from './utils.mjs';
 
 interface FailedTestInfo {
     name: string;
@@ -21,7 +22,7 @@ export default async function* ghaReporter(
             if (event.type === 'test:fail') {
                 failedTests.push({
                     name: event.data.name,
-                    file: event.data.file,
+                    file: transformFilename(event.data.file),
                     line: event.data.line,
                     column: event.data.column,
                     message: event.data.details.error.message,
