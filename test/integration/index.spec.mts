@@ -1,5 +1,5 @@
 import { equal, match } from 'node:assert/strict';
-import { describe, it, run } from 'node:test';
+import { after, before, describe, it, run } from 'node:test';
 import { WritableBufferStream } from '@myrotvorets/buffer-stream';
 import { dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,6 +18,17 @@ const runner = (files: string[]): Promise<string> =>
     });
 
 void describe('GitHub Actions Reporter', () => {
+    let env: typeof process.env;
+
+    before(() => {
+        env = { ...process.env };
+        process.env['GITHUB_ACTIONS'] = 'true';
+    });
+
+    after(() => {
+        process.env = env;
+    });
+
     void it('will generate a report entry on failure', async () => {
         const thisDir = dirname(fileURLToPath(import.meta.url));
         const result = await runner([`${thisDir}/test${extname(fileURLToPath(import.meta.url))}`]);

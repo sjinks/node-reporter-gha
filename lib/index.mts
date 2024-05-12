@@ -13,16 +13,20 @@ export default async function* ghaReporter(
     source: AsyncGenerator<TestEvent, void> | Generator<TestEvent, void>,
 ): AsyncGenerator<string, void> {
     const failedTests: FailedTestInfo[] = [];
+    const isGHA = process.env['GITHUB_ACTIONS'] === 'true';
 
     for await (const event of source) {
-        if (event.type === 'test:fail') {
-            failedTests.push({
-                name: event.data.name,
-                file: event.data.file,
-                line: event.data.line,
-                column: event.data.column,
-                message: event.data.details.error.message,
-            });
+        // eslint-disable-next-line sonarjs/no-collapsible-if
+        if (isGHA) {
+            if (event.type === 'test:fail') {
+                failedTests.push({
+                    name: event.data.name,
+                    file: event.data.file,
+                    line: event.data.line,
+                    column: event.data.column,
+                    message: event.data.details.error.message,
+                });
+            }
         }
     }
 
