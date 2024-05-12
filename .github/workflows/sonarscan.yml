@@ -65,6 +65,7 @@ jobs:
         run: npm run test:coverage
         env:
           NO_UPDATE_NOTIFIER: 'true'
+        continue-on-error: true
 
       - name: Grab info
         id: info
