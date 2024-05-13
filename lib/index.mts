@@ -1,6 +1,6 @@
 import type { TestEvent } from 'node:test/reporters';
 import { issueCommand } from './command.mjs';
-import { transformFilename } from './utils.mjs';
+import { isSubtestsFailedError, transformFilename } from './utils.mjs';
 
 interface FailedTestInfo {
     name: string;
@@ -20,6 +20,11 @@ export default async function* ghaReporter(
         // eslint-disable-next-line sonarjs/no-collapsible-if
         if (isGHA) {
             if (event.type === 'test:fail') {
+                const { error } = event.data.details;
+                if (isSubtestsFailedError(error)) {
+                    continue;
+                }
+
                 failedTests.push({
                     name: event.data.name,
                     file: transformFilename(event.data.file),

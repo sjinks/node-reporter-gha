@@ -13,3 +13,9 @@ export const escapeProperty = (s: unknown): string => String(s).replace(/[%\r\n:
 
 export const transformFilename = (s: string | undefined): string | undefined =>
     s?.startsWith('file://') ? new URL(s).pathname : s;
+
+export const isSubtestsFailedError = (error: Error): boolean =>
+    'code' in error &&
+    'failureType' in error &&
+    error.code === 'ERR_TEST_FAILURE' &&
+    error.failureType === 'subtestsFailed';

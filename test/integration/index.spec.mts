@@ -33,13 +33,12 @@ void describe('GitHub Actions Reporter', () => {
         const thisDir = dirname(fileURLToPath(import.meta.url));
         const result = await runner([`${thisDir}/test${extname(fileURLToPath(import.meta.url))}`]);
         const lines = result.trim().split('\n');
-        equal(lines.length, 4);
+        equal(lines.length, 3);
         equal(lines[0], '::group::Test Failures');
         match(
             lines[1]!,
             /^::error title=will generate a report entry on failure,file=[^,]+,line=\d+,col=\d+::Expected 2 to equal 1$/u,
         );
-        match(lines[2]!, /^::error title=Sample test suite,file=[^,]+,line=\d+,col=\d+::1 subtest failed$/u);
-        equal(lines[3], '::endgroup::');
+        equal(lines[2], '::endgroup::');
     });
 });
