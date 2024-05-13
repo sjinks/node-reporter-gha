@@ -1,4 +1,4 @@
-import { type TestEvent, tap } from 'node:test/reporters';
+import { type TestEvent } from 'node:test/reporters';
 import { appendFile } from 'node:fs/promises';
 import { issueCommand } from './command.mjs';
 import { generateSummary, getLocationInfo, isSubtestsFailedError } from './utils.mjs';
@@ -73,15 +73,15 @@ export default async function* ghaReporter(source: AsyncGenerator<TestEvent, voi
     const stats: Record<string, string> = {};
     const isGHA = process.env['GITHUB_ACTIONS'] === 'true';
     if (!isGHA) {
-        yield* tap(source);
-        return;
+        for await (const _ of source) {
+            // drain the source
+        }
+    } else {
+        for await (const event of source) {
+            yield* handleEvent(event, failedTests, stats);
+        }
+
+        yield* handleFailedTests(failedTests);
+        await writeSummary(stats);
     }
-
-    for await (const event of source) {
-        yield* handleEvent(event, failedTests, stats);
-    }
-
-    yield* handleFailedTests(failedTests);
-
-    await writeSummary(stats);
 }
