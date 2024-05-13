@@ -91,6 +91,16 @@ const queue: TestEvent[] = [
         },
     },
     {
+        type: 'test:diagnostic',
+        data: {
+            nesting: 1,
+            message: 'This test should pass',
+            line: 2,
+            column: 196,
+            file: 'node-reporter-gha/test/integration/test.ts',
+        },
+    },
+    {
         type: 'test:fail',
         data: {
             name: 'will generate a report entry on failure',
@@ -217,6 +227,7 @@ await describe('reporter', async () => {
 
     await test('will produce a report', async () => {
         const expected = [
+            `::notice file=node-reporter-gha/test/integration/test.ts,line=2,col=196::This test should pass${EOL}`,
             `::group::Test Failures${EOL}`,
             `::error title=will generate a report entry on failure,file=node-reporter-gha/test/integration/test.ts,line=2,col=196::Expected 2 to equal 1${EOL}`,
             `::error title=Sample test suite,file=node-reporter-gha/test/integration/test.ts,line=2,col=137::1 subtest failed${EOL}`,

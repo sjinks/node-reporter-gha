@@ -1,9 +1,10 @@
+import { AssertionError } from 'node:assert';
 import { deepEqual, equal } from 'node:assert/strict';
 import { describe, test } from 'node:test';
-import { AssertionError } from 'node:assert';
 import {
     escapeData,
     escapeProperty,
+    generateSummary,
     getLocationInfo,
     isSubtestsFailedError,
     transformFilename,
@@ -188,5 +189,34 @@ await describe('utils', async () => {
             const actual = getLocationInfo(event);
             deepEqual(actual, expected);
         });
+    });
+
+    await test('generateSummary', () => {
+        const stats: Record<string, string> = {
+            tests: '2',
+            suites: '1',
+            pass: '1',
+            fail: '1',
+            cancelled: '0',
+            skipped: '0',
+            todo: '0',
+            duration_ms: '78.399083',
+            unknown: '-1',
+        };
+
+        const expected =
+            `## Test Summary\n\n<table><tbody>\n` +
+            `<tr><th align="left">Total Tests</th><td>2</td></tr>\n` +
+            `<tr><th align="left">Test Suites</th><td>1</td></tr>\n` +
+            `<tr><th align="left">Tests Passed</th><td>1</td></tr>\n` +
+            `<tr><th align="left">Tests Failed</th><td>1</td></tr>\n` +
+            `<tr><th align="left">Tests Canceled</th><td>0</td></tr>\n` +
+            `<tr><th align="left">Test Skipped</th><td>0</td></tr>\n` +
+            `<tr><th align="left">Incomplete Tests</th><td>0</td></tr>\n` +
+            `<tr><th align="left">Duration</th><td>78.399083</td></tr>\n` +
+            `<tr><th align="left">unknown</th><td>-1</td></tr>\n` +
+            `</tbody></table>\n\n`;
+        const actual = generateSummary(stats);
+        equal(actual, expected);
     });
 });
