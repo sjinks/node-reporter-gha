@@ -1,4 +1,4 @@
-import type { TestEvent } from 'node:test/reporters';
+import { type TestEvent, tap } from 'node:test/reporters';
 import { issueCommand } from './command.mjs';
 import { isSubtestsFailedError, transformFilename } from './utils.mjs';
 
@@ -10,29 +10,32 @@ interface FailedTestInfo {
     message: string;
 }
 
-export default async function* ghaReporter(
-    source: AsyncGenerator<TestEvent, void> | Generator<TestEvent, void>,
-): AsyncGenerator<string, void> {
+function fallbackReporter(source: AsyncGenerator<TestEvent, void>): AsyncGenerator<string, void> {
+    return tap(source);
+}
+
+export default async function* ghaReporter(source: AsyncGenerator<TestEvent, void>): AsyncGenerator<string, void> {
     const failedTests: FailedTestInfo[] = [];
     const isGHA = process.env['GITHUB_ACTIONS'] === 'true';
+    if (!isGHA) {
+        yield* fallbackReporter(source);
+        return;
+    }
 
     for await (const event of source) {
-        // eslint-disable-next-line sonarjs/no-collapsible-if
-        if (isGHA) {
-            if (event.type === 'test:fail') {
-                const { error } = event.data.details;
-                if (isSubtestsFailedError(error)) {
-                    continue;
-                }
-
-                failedTests.push({
-                    name: event.data.name,
-                    file: transformFilename(event.data.file),
-                    line: event.data.line,
-                    column: event.data.column,
-                    message: event.data.details.error.message,
-                });
+        if (event.type === 'test:fail') {
+            const { error } = event.data.details;
+            if (isSubtestsFailedError(error)) {
+                continue;
             }
+
+            failedTests.push({
+                name: event.data.name,
+                file: transformFilename(event.data.file),
+                line: event.data.line,
+                column: event.data.column,
+                message: event.data.details.error.message,
+            });
         }
     }
 

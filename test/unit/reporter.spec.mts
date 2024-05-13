@@ -2,6 +2,7 @@ import { deepEqual } from 'node:assert/strict';
 import { EOL } from 'node:os';
 import { after, before, describe, test } from 'node:test';
 import type { TestEvent } from 'node:test/reporters';
+import { equal, match } from 'node:assert';
 import ghaReporter from '../../lib/index.mjs';
 
 const queue: TestEvent[] = [
@@ -196,8 +197,8 @@ const queue: TestEvent[] = [
     },
 ];
 
-function* generator(): Generator<TestEvent> {
-    for (const event of queue) {
+async function* generator(): AsyncGenerator<TestEvent, void> {
+    for await (const event of queue) {
         yield event;
     }
 }
@@ -228,5 +229,16 @@ await describe('reporter', async () => {
         }
 
         deepEqual(actual, expected);
+    });
+
+    await test('will fall back to tap reporter if not in GitHub Actions', async () => {
+        process.env['GITHUB_ACTIONS'] = 'false';
+        const actual: string[] = [];
+        for await (const line of ghaReporter(generator())) {
+            actual.push(line);
+        }
+
+        equal(0 in actual, true);
+        match(actual[0]!.trim(), /^TAP version \d+$/u);
     });
 });
