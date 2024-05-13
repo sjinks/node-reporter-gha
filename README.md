@@ -24,3 +24,13 @@ node --test --test-reporter=spec --test-reporter-destination=stdout --test-repor
 ```
 
 See [Test reporters](https://nodejs.org/api/test.html#test-reporters) for details.
+
+## Sample Output
+
+### Inline Annotations
+
+![Inline Annotations](https://github.com/sjinks/node-reporter-gha/assets/7810770/061c55fd-dcce-4d04-8354-c360f484b0fe)
+
+### Summary
+
+![Test Summary](https://github.com/sjinks/node-reporter-gha/assets/7810770/88e6a3b2-c65b-41dc-af23-78800f8e00a3)
