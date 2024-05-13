@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "test": "tsx --test test/unit/*.spec.mts && tsx test/integration/index.spec.mts",
     "test:js": "node --test dist/test/unit/*.spec.mjs && node dist/test/integration/index.spec.mjs",
     "pretest:coverage": "npm run build",
