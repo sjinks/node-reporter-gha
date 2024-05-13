@@ -1,6 +1,13 @@
-import { equal } from 'node:assert/strict';
+import { deepEqual, equal } from 'node:assert/strict';
 import { describe, test } from 'node:test';
-import { escapeData, escapeProperty, isSubtestsFailedError, transformFilename } from '../../lib/utils.mjs';
+import { AssertionError } from 'node:assert';
+import {
+    escapeData,
+    escapeProperty,
+    getLocationInfo,
+    isSubtestsFailedError,
+    transformFilename,
+} from '../../lib/utils.mjs';
 
 interface TestError extends Error {
     code?: string;
@@ -66,6 +73,120 @@ await describe('utils', async () => {
         await test('should return true for subtestsFailed', () => {
             const error = createTestError('subtestsFailed', 'ERR_TEST_FAILURE', 'subtestsFailed');
             equal(isSubtestsFailedError(error), true);
+        });
+    });
+
+    await describe('getLocationInfo', async () => {
+        await test('return undefined for test:watch:drained-like events', () => {
+            const expected = [undefined, undefined, undefined];
+            const actual = getLocationInfo({ type: 'test:watch:drained' });
+            deepEqual(actual, expected);
+        });
+
+        await test('should handle non-ERR_TEST_FAILURE errors', () => {
+            const expectedFile = 'node-reporter-gha/test/integration/test.ts';
+            const expectedLine = 2;
+            const expectedColumn = 196;
+            const event = {
+                type: 'test:fail',
+                data: {
+                    name: 'will generate a report entry on failure',
+                    nesting: 1,
+                    testNumber: 1,
+                    details: { duration_ms: 0.941569, error: new Error('Expected 2 to equal 1') },
+                    line: expectedLine,
+                    column: expectedColumn,
+                    file: expectedFile,
+                },
+            } as const;
+
+            const expected = [expectedLine, expectedColumn, expectedFile];
+            const actual = getLocationInfo(event);
+            deepEqual(actual, expected);
+        });
+
+        await test('should extract location from stack trace', () => {
+            const expectedFile = '/node-reporter-gha/test/integration/fail.spec.mjs';
+            const expectedLine = 17;
+            const expectedColumn = 13;
+            const cause = new AssertionError({ actual: 1, expected: 2, operator: 'strictEqual' });
+            cause.stack =
+                'AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n' +
+                '\n' +
+                '1 !== 2\n' +
+                '\n' +
+                `    at TestContext.<anonymous> (file://${expectedFile}:${expectedLine}:${expectedColumn})\n` +
+                '    at Test.runInAsyncScope (node:async_hooks:206:9)\n' +
+                '    at Test.run (node:internal/test_runner/test:656:25)\n' +
+                '    at Test.start (node:internal/test_runner/test:565:17)\n' +
+                '    at node:internal/test_runner/test:987:71\n' +
+                '    at node:internal/per_context/primordials:487:82\n' +
+                '    at new Promise (<anonymous>)\n' +
+                '    at new SafePromise (node:internal/per_context/primordials:455:29)\n' +
+                '    at node:internal/per_context/primordials:487:9\n' +
+                '    at Array.map (<anonymous>)\n';
+            const error = new Error('Expected 2 to equal 1', { cause }) as TestError;
+            error.code = 'ERR_TEST_FAILURE';
+            error.failureType = 'testCodeFailure';
+
+            const event = {
+                type: 'test:fail',
+                data: {
+                    name: 'will generate a report entry on failure',
+                    nesting: 1,
+                    testNumber: 1,
+                    details: { duration_ms: 0.941569, error },
+                    line: 15,
+                    column: 15,
+                    file: `file://${expectedFile}`,
+                },
+            } as const;
+
+            const expected = [expectedLine, expectedColumn, expectedFile];
+            const actual = getLocationInfo(event);
+            deepEqual(actual, expected);
+        });
+
+        await test('should extract fall back to looking for TestContext when file is not in the trace', () => {
+            const expectedFile = '/node-reporter-gha/test/integration/fail.spec.mjs';
+            const expectedLine = 17;
+            const expectedColumn = 13;
+            const cause = new AssertionError({ actual: 1, expected: 2, operator: 'strictEqual' });
+            cause.stack =
+                'AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n' +
+                '\n' +
+                '1 !== 2\n' +
+                '\n' +
+                `    at TestContext.<anonymous> (file:///node-reporter-gha/test/integration/fail.spec.mts:${expectedLine}:${expectedColumn})\n` +
+                '    at Test.runInAsyncScope (node:async_hooks:206:9)\n' +
+                '    at Test.run (node:internal/test_runner/test:656:25)\n' +
+                '    at Test.start (node:internal/test_runner/test:565:17)\n' +
+                '    at node:internal/test_runner/test:987:71\n' +
+                '    at node:internal/per_context/primordials:487:82\n' +
+                '    at new Promise (<anonymous>)\n' +
+                '    at new SafePromise (node:internal/per_context/primordials:455:29)\n' +
+                '    at node:internal/per_context/primordials:487:9\n' +
+                '    at Array.map (<anonymous>)\n';
+            const error = new Error('Expected 2 to equal 1', { cause }) as TestError;
+            error.code = 'ERR_TEST_FAILURE';
+            error.failureType = 'testCodeFailure';
+
+            const event = {
+                type: 'test:fail',
+                data: {
+                    name: 'will generate a report entry on failure',
+                    nesting: 1,
+                    testNumber: 1,
+                    details: { duration_ms: 0.941569, error },
+                    line: 15,
+                    column: 15,
+                    file: `file://${expectedFile}`,
+                },
+            } as const;
+
+            const expected = [expectedLine, expectedColumn, expectedFile];
+            const actual = getLocationInfo(event);
+            deepEqual(actual, expected);
         });
     });
 });
