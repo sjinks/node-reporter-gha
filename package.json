@@ -20,11 +20,11 @@
     "github-actions"
   ],
   "files": [
-    "dist/lib/index.mjs",
-    "dist/lib/index.d.mts",
-    "dist/lib/index.mjs.map"
+    "./dist/lib/*.mjs",
+    "./dist/lib/*.d.mts",
+    "./dist/lib/*.mjs.map"
   ],
-  "typings": "dist/lib/index.d.ts",
+  "typings": "./dist/lib/index.d.mts",
   "author": "Volodymyr Kolesnykov <volodymyr@wildwolf.name> (https://wildwolf.name/)",
   "license": "MIT",
   "devDependencies": {
