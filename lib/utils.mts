@@ -14,6 +14,7 @@ export const escapeData = (s: unknown): string => String(s).replace(/[%\r\n]/gu,
 export const escapeProperty = (s: unknown): string => String(s).replace(/[%\r\n:,]/gu, replacer);
 
 export const transformFilename = (s: string | undefined): string | undefined =>
+    // for ESM, the filename is a URL
     s?.startsWith('file://') ? new URL(s).pathname : s;
 
 export const isSubtestsFailedError = (error: Error): boolean =>
@@ -45,4 +46,28 @@ export function getLocationInfo(
     }
 
     return [line, column, file];
+}
+
+export function generateSummary(data: Record<string, string>): string {
+    const lut: Record<string, string> = {
+        tests: 'Total Tests',
+        suites: 'Test Suites',
+        pass: 'Tests Passed',
+        fail: 'Tests Failed',
+        cancelled: 'Tests Canceled',
+        skipped: 'Test Skipped',
+        todo: 'Incomplete Tests',
+        duration_ms: 'Duration',
+    };
+
+    return [
+        '## Test Summary',
+        '',
+        '<table><tbody>',
+        Object.entries(data)
+            .map(([key, value]) => `<tr><th align="left">${lut[key] ?? key}</th><td>${value}</td></tr>`)
+            .join('\n'),
+        '</tbody></table>\n',
+        '',
+    ].join('\n');
 }
