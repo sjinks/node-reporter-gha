@@ -1,6 +1,6 @@
 import { type TestEvent, tap } from 'node:test/reporters';
 import { issueCommand } from './command.mjs';
-import { isSubtestsFailedError, transformFilename } from './utils.mjs';
+import { getLocationInfo, isSubtestsFailedError } from './utils.mjs';
 
 interface FailedTestInfo {
     name: string;
@@ -25,17 +25,17 @@ export default async function* ghaReporter(source: AsyncGenerator<TestEvent, voi
     for await (const event of source) {
         if (event.type === 'test:fail') {
             const { error } = event.data.details;
-            if (isSubtestsFailedError(error)) {
-                continue;
-            }
+            if (!isSubtestsFailedError(error)) {
+                const [line, column, file] = getLocationInfo(event);
 
-            failedTests.push({
-                name: event.data.name,
-                file: transformFilename(event.data.file),
-                line: event.data.line,
-                column: event.data.column,
-                message: event.data.details.error.message,
-            });
+                failedTests.push({
+                    name: event.data.name,
+                    file,
+                    line,
+                    column,
+                    message: error.message,
+                });
+            }
         }
     }
 
