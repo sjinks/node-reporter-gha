@@ -27,7 +27,12 @@ export function getLocationInfo(
     event: TestEvent,
 ): [line: number | undefined, column: number | undefined, file: string | undefined] {
     // There is no `data` propertry in the `test:watch:drained` event
-    let { line = undefined, column = undefined, file = undefined } = 'data' in event ? event.data : {};
+    // There is no location info in the `test:coverage` event
+    let {
+        line = undefined,
+        column = undefined,
+        file = undefined,
+    } = 'data' in event && 'file' in event.data ? event.data : {};
 
     file = transformFilename(file);
     if (event.type === 'test:fail' && file !== undefined) {
