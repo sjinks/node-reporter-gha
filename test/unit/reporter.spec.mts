@@ -109,7 +109,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 196,
             file: 'node-reporter-gha/test/integration/test.ts',
-        },
+        } as TestFail,
     },
     {
         type: 'test:dequeue',
@@ -163,7 +163,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 137,
             file: 'node-reporter-gha/test/integration/test.ts',
-        },
+        } as TestFail,
     },
     {
         type: 'test:plan',

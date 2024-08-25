@@ -1,6 +1,7 @@
 import { AssertionError } from 'node:assert';
 import { deepEqual, equal } from 'node:assert/strict';
 import { describe, test } from 'node:test';
+import { TestEvent } from 'node:test/reporters';
 import {
     escapeData,
     escapeProperty,
@@ -80,7 +81,7 @@ await describe('utils', async () => {
     await describe('getLocationInfo', async () => {
         await test('return undefined for test:watch:drained-like events', () => {
             const expected = [undefined, undefined, undefined];
-            const actual = getLocationInfo({ type: 'test:watch:drained' });
+            const actual = getLocationInfo({ type: 'test:watch:drained', data: undefined });
             deepEqual(actual, expected);
         });
 
@@ -88,18 +89,21 @@ await describe('utils', async () => {
             const expectedFile = 'node-reporter-gha/test/integration/test.ts';
             const expectedLine = 2;
             const expectedColumn = 196;
-            const event = {
+            const event: TestEvent = {
                 type: 'test:fail',
                 data: {
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
-                    details: { duration_ms: 0.941569, error: new Error('Expected 2 to equal 1') },
+                    details: {
+                        duration_ms: 0.941569,
+                        error: new Error('Expected 2 to equal 1', { cause: new Error() }),
+                    },
                     line: expectedLine,
                     column: expectedColumn,
                     file: expectedFile,
-                },
-            } as const;
+                } as TestFail,
+            };
 
             const expected = [expectedLine, expectedColumn, expectedFile];
             const actual = getLocationInfo(event);
@@ -140,7 +144,7 @@ await describe('utils', async () => {
                     line: 15,
                     column: 15,
                     file: `file://${expectedFile}`,
-                },
+                } as TestFail,
             } as const;
 
             const expected = [expectedLine, expectedColumn, expectedFile];
@@ -172,7 +176,7 @@ await describe('utils', async () => {
             error.code = 'ERR_TEST_FAILURE';
             error.failureType = 'testCodeFailure';
 
-            const event = {
+            const event: TestEvent = {
                 type: 'test:fail',
                 data: {
                     name: 'will generate a report entry on failure',
@@ -182,8 +186,8 @@ await describe('utils', async () => {
                     line: 15,
                     column: 15,
                     file: `file://${expectedFile}`,
-                },
-            } as const;
+                } as TestFail,
+            };
 
             const expected = [expectedLine, expectedColumn, expectedFile];
             const actual = getLocationInfo(event);
