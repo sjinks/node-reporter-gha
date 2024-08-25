@@ -32,7 +32,9 @@ export function getLocationInfo(
         line = undefined,
         column = undefined,
         file = undefined,
-    } = 'data' in event && 'file' in event.data ? event.data : {};
+    } = 'data' in event && event.data && 'file' in event.data && 'line' in event.data && 'column' in event.data
+        ? event.data
+        : {};
 
     file = transformFilename(file);
     if (event.type === 'test:fail' && file !== undefined) {
