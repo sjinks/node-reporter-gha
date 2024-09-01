@@ -99,9 +99,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
-
       - name: Run tests
         run: |
-          npx tsx --test-reporter=./dist/lib/index.mjs --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout --test test/unit/*.spec.mts
+          node --import=./loader.mjs --test-reporter=./lib/loader.mjs --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout --test test/unit/*.spec.mts
