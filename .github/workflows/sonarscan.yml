@@ -60,9 +60,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm run test:coverage
-        env:
-          NO_UPDATE_NOTIFIER: 'true'
+        run: npm run test:sonarqube
         continue-on-error: true
 
       - name: Grab info
@@ -84,3 +82,4 @@ jobs:
             -Dsonar.links.issue=${{ github.event.repository.html_url }}/issues
             -Dsonar.links.scm=${{ github.repositoryUrl }}
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.testExecutionReportPaths=test-report.xml

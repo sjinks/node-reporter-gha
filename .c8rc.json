@@ -1,5 +1,5 @@
 {
-    "extension": [".mjs"],
-    "exclude": ["dist/test/**"],
+    "extension": [".mts"],
+    "exclude": ["test/**"],
     "reporter": ["text", "lcov"]
 }
