@@ -1,14 +1,14 @@
 import { TestEvent } from 'node:test/reporters';
 
-const map: Record<string, string> = {
+const map = {
     '\r': '%0D',
     '\n': '%0A',
     '%': '%25',
     ',': '%2C',
     ':': '%3A',
-};
+} as const;
 
-const replacer = (match: string): string => map[match]!;
+const replacer = (match: string): string => map[match as keyof typeof map];
 
 export const escapeData = (s: unknown): string => String(s).replace(/[%\r\n]/gu, replacer);
 export const escapeProperty = (s: unknown): string => String(s).replace(/[%\r\n:,]/gu, replacer);
