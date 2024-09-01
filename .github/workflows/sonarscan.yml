@@ -12,6 +12,12 @@ on:
 permissions:
   contents: read
 
+env:
+  NPM_CONFIG_FUND: '0'
+  NPM_CONFIG_AUDIT: '0'
+  SUPPRESS_SUPPORT: '1'
+  NO_UPDATE_NOTIFIER: 'true'
+
 jobs:
   build:
     name: SonarCloud Scan
@@ -29,10 +35,12 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com
             github.com:443
-            pipelinesghubeus23.actions.githubusercontent.com:443
+            npm.pkg.github.com:443
+            objects.githubusercontent.com:443
             registry.npmjs.org:443
+            api.sonarcloud.io:443
+            analysis-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
             sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
             scanner.sonarcloud.io:443
             sonarcloud.io:443
@@ -49,19 +57,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_FUND: '0'
-          NPM_CONFIG_AUDIT: '0'
-          SUPPRESS_SUPPORT: '1'
-          NO_UPDATE_NOTIFIER: 'true'
-
-      - name: Run postinstall scripts
-        run: npm rebuild && npm run prepare --if-present
+        run: npm ci
 
       - name: Run tests
-        shell: bash
         run: npm run test:coverage
         env:
           NO_UPDATE_NOTIFIER: 'true'
