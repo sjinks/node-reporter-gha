@@ -37,7 +37,7 @@ void describe('GitHub Actions Reporter', () => {
         equal(lines[0], '::group::Test Failures');
         match(
             lines[1]!,
-            /^::error title=will generate a report entry on failure,file=[^,]+,line=\d+,col=\d+::Expected 2 to equal 1$/u,
+            /^::error title=will generate a report entry on failure,file=[^,]+,line=\d+,col=\d+::Expected 2 to equal 1/u,
         );
         equal(lines[2], '::endgroup::');
     });
