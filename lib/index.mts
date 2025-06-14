@@ -73,7 +73,6 @@ export default async function* ghaReporter(source: AsyncGenerator<TestEvent, voi
     const stats: Record<string, string> = {};
     const isGHA = process.env['GITHUB_ACTIONS'] === 'true';
     if (!isGHA) {
-        // eslint-disable-next-line sonarjs/no-unused-vars
         for await (const _ of source) {
             // drain the source
         }
