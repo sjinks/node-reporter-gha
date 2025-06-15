@@ -18,7 +18,8 @@
         "noImplicitOverride": true,
         "noImplicitReturns": true,
         "esModuleInterop": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "erasableSyntaxOnly": true
     },
     "compileOnSave": true
 }

@@ -2,11 +2,15 @@ import { EOL } from 'node:os';
 import { escapeData, escapeProperty } from './utils.mjs';
 
 class Command {
-    public constructor(
-        private readonly command: string,
-        private readonly properties: Record<string, unknown>,
-        private readonly message: string,
-    ) {}
+    private readonly command: string;
+    private readonly properties: Record<string, unknown>;
+    private readonly message: string;
+
+    public constructor(command: string, properties: Record<string, unknown>, message: string) {
+        this.command = command;
+        this.properties = properties;
+        this.message = message;
+    }
 
     public toString(): string {
         let cmdStr = `::${this.command}`;
