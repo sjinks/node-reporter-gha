@@ -10,6 +10,7 @@ const queue: TestEvent[] = [
         data: {
             nesting: 0,
             name: 'node-reporter-gha/test/integration/test.ts',
+            type: 'test',
         },
     },
     {
@@ -17,6 +18,7 @@ const queue: TestEvent[] = [
         data: {
             nesting: 0,
             name: 'node-reporter-gha/test/integration/test.ts',
+            type: 'test',
         },
     },
     {
@@ -27,6 +29,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 137,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'suite',
         },
     },
     {
@@ -37,6 +40,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 137,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'suite',
         },
     },
     {
@@ -47,6 +51,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 196,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'test',
         },
     },
     {
@@ -57,6 +62,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 196,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'test',
         },
     },
     {
@@ -67,6 +73,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 332,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'test',
         },
     },
     {
@@ -119,6 +126,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 332,
             file: 'node-reporter-gha/test/integration/test.ts',
+            type: 'suite',
         },
     },
     {
