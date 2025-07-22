@@ -1,6 +1,6 @@
 import { AssertionError } from 'node:assert';
 import { deepEqual, equal } from 'node:assert/strict';
-import { describe, test } from 'node:test';
+import { EventData, describe, test } from 'node:test';
 import { TestEvent } from 'node:test/reporters';
 import {
     escapeData,
@@ -97,12 +97,12 @@ await describe('utils', async () => {
                     testNumber: 1,
                     details: {
                         duration_ms: 0.941569,
-                        error: new Error('Expected 2 to equal 1', { cause: new Error() }),
+                        error: new Error('Expected 2 to equal 1', { cause: new Error() }) as EventData.Error,
                     },
                     line: expectedLine,
                     column: expectedColumn,
                     file: expectedFile,
-                } as TestFail,
+                },
             };
 
             const expected = [expectedLine, expectedColumn, expectedFile];
@@ -140,11 +140,11 @@ await describe('utils', async () => {
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
-                    details: { duration_ms: 0.941569, error },
+                    details: { duration_ms: 0.941569, error: error as EventData.Error },
                     line: 15,
                     column: 15,
                     file: `file://${expectedFile}`,
-                } as TestFail,
+                },
             } as const;
 
             const expected = [expectedLine, expectedColumn, expectedFile];
@@ -182,11 +182,11 @@ await describe('utils', async () => {
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
-                    details: { duration_ms: 0.941569, error },
+                    details: { duration_ms: 0.941569, error: error as EventData.Error },
                     line: 15,
                     column: 15,
                     file: `file://${expectedFile}`,
-                } as TestFail,
+                },
             };
 
             const expected = [expectedLine, expectedColumn, expectedFile];

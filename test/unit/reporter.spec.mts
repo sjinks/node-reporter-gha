@@ -1,6 +1,6 @@
 import { deepEqual, equal } from 'node:assert/strict';
 import { EOL } from 'node:os';
-import { after, before, describe, test } from 'node:test';
+import { EventData, after, before, describe, test } from 'node:test';
 import type { TestEvent } from 'node:test/reporters';
 import ghaReporter from '../../lib/index.mjs';
 
@@ -112,11 +112,11 @@ const queue: TestEvent[] = [
             name: 'will generate a report entry on failure',
             nesting: 1,
             testNumber: 1,
-            details: { duration_ms: 0.941569, error: new Error('Expected 2 to equal 1') },
+            details: { duration_ms: 0.941569, error: new Error('Expected 2 to equal 1') as EventData.Error },
             line: 2,
             column: 196,
             file: 'node-reporter-gha/test/integration/test.ts',
-        } as TestFail,
+        },
     },
     {
         type: 'test:dequeue',
@@ -167,11 +167,11 @@ const queue: TestEvent[] = [
             name: 'Sample test suite',
             nesting: 0,
             testNumber: 1,
-            details: { duration_ms: 1.663874, type: 'suite', error: new Error('1 subtest failed') },
+            details: { duration_ms: 1.663874, type: 'suite', error: new Error('1 subtest failed') as EventData.Error },
             line: 2,
             column: 137,
             file: 'node-reporter-gha/test/integration/test.ts',
-        } as TestFail,
+        },
     },
     {
         type: 'test:plan',
