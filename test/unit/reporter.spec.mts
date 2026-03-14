@@ -104,6 +104,7 @@ const queue: TestEvent[] = [
             line: 2,
             column: 196,
             file: 'node-reporter-gha/test/integration/test.ts',
+            level: 'info',
         },
     },
     {
@@ -179,37 +180,38 @@ const queue: TestEvent[] = [
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'tests 2' },
+        data: { nesting: 0, message: 'tests 2', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'suites 1' },
+        data: { nesting: 0, message: 'suites 1', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'pass 1' },
+        data: { nesting: 0, message: 'pass 1', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'fail 1' },
+        data: { nesting: 0, message: 'fail 1', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'cancelled 0' },
+        data: { nesting: 0, message: 'cancelled 0', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'skipped 0' },
+        data: { nesting: 0, message: 'skipped 0', level: 'info' },
     },
     {
         type: 'test:diagnostic',
-        data: { nesting: 0, message: 'todo 0' },
+        data: { nesting: 0, message: 'todo 0', level: 'info' },
     },
     {
         type: 'test:diagnostic',
         data: {
             nesting: 0,
             message: 'duration_ms 86.117666',
+            level: 'info',
         },
     },
 ];
