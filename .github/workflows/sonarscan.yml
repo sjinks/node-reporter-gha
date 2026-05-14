@@ -45,6 +45,8 @@ jobs:
             sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
             scanner.sonarcloud.io:443
             sonarcloud.io:443
+            keys.openpgp.org:443
+            keyserver.ubuntu.com:443
 
       - name: Check out the source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
