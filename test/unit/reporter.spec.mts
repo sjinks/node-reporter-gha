@@ -8,6 +8,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:enqueue',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 1,
             nesting: 0,
             name: 'node-reporter-gha/test/integration/test.ts',
             type: 'test',
@@ -16,6 +19,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:dequeue',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 1,
             nesting: 0,
             name: 'node-reporter-gha/test/integration/test.ts',
             type: 'test',
@@ -24,6 +30,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:enqueue',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 2,
             nesting: 0,
             name: 'Sample test suite',
             line: 2,
@@ -35,6 +44,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:dequeue',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 2,
             nesting: 0,
             name: 'Sample test suite',
             line: 2,
@@ -46,6 +58,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:enqueue',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 3,
             nesting: 1,
             name: 'will generate a report entry on failure',
             line: 2,
@@ -57,6 +72,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:dequeue',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 3,
             nesting: 1,
             name: 'will generate a report entry on failure',
             line: 2,
@@ -68,6 +86,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:enqueue',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 4,
             nesting: 1,
             name: 'will not generate anything',
             line: 2,
@@ -79,6 +100,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:start',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 2,
             nesting: 0,
             name: 'Sample test suite',
             line: 2,
@@ -89,6 +113,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:start',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 3,
             nesting: 1,
             name: 'will generate a report entry on failure',
             line: 2,
@@ -110,6 +137,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:fail',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 3,
             name: 'will generate a report entry on failure',
             nesting: 1,
             testNumber: 1,
@@ -122,6 +152,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:dequeue',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 4,
             nesting: 1,
             name: 'will not generate anything',
             line: 2,
@@ -133,6 +166,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:start',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 4,
             nesting: 1,
             name: 'will not generate anything',
             line: 2,
@@ -143,6 +179,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:pass',
         data: {
+            parentId: 2,
+            tags: [],
+            testId: 4,
             name: 'will not generate anything',
             nesting: 1,
             testNumber: 2,
@@ -165,6 +204,9 @@ const queue: TestEvent[] = [
     {
         type: 'test:fail',
         data: {
+            parentId: undefined,
+            tags: [],
+            testId: 2,
             name: 'Sample test suite',
             nesting: 0,
             testNumber: 1,
