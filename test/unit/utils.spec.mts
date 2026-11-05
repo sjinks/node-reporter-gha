@@ -92,6 +92,9 @@ await describe('utils', async () => {
             const event: TestEvent = {
                 type: 'test:fail',
                 data: {
+                    parentId: undefined,
+                    tags: [],
+                    testId: 1,
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
@@ -137,6 +140,9 @@ await describe('utils', async () => {
             const event = {
                 type: 'test:fail',
                 data: {
+                    parentId: undefined,
+                    tags: [],
+                    testId: 1,
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
@@ -145,7 +151,7 @@ await describe('utils', async () => {
                     column: 15,
                     file: `file://${expectedFile}`,
                 },
-            } as const;
+            } satisfies TestEvent;
 
             const expected = [expectedLine, expectedColumn, expectedFile];
             const actual = getLocationInfo(event);
@@ -179,6 +185,9 @@ await describe('utils', async () => {
             const event: TestEvent = {
                 type: 'test:fail',
                 data: {
+                    parentId: undefined,
+                    tags: [],
+                    testId: 1,
                     name: 'will generate a report entry on failure',
                     nesting: 1,
                     testNumber: 1,
